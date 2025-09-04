@@ -23,18 +23,48 @@ const cartSlice = createSlice({
   name: "cart",
   initialState,
   reducers: {
-    addToCart(state, action: PayloadAction<Omit<CartItem, "count">>) {
-      const product = action.payload;
-      const existing = state.items.find((item) => item.id === product.id);
+    addToCart(
+      state,
+      action: PayloadAction<Omit<CartItem, "count"> & { count?: number }>
+    ) {
+      const {
+        id,
+        title,
+        price,
+        category,
+        description,
+        image,
+        count = 1,
+      } = action.payload;
+      const existing = state.items.find((item) => item.id === id);
       if (existing) {
-        existing.count += 1;
+        existing.count += count;
       } else {
-        state.items.push({ ...product, count: 1 });
+        state.items.push({
+          id,
+          title,
+          price,
+          category,
+          description,
+          image,
+          count,
+        });
       }
       sessionStorage.setItem("cart", JSON.stringify(state.items));
     },
     removeFromCart(state, action: PayloadAction<number>) {
       state.items = state.items.filter((item) => item.id !== action.payload);
+      sessionStorage.setItem("cart", JSON.stringify(state.items));
+    },
+    updateCartItemCount(
+      state,
+      action: PayloadAction<{ id: number; count: number }>
+    ) {
+      const { id, count } = action.payload;
+      const item = state.items.find((item) => item.id === id);
+      if (item && count > 0) {
+        item.count = count;
+      }
       sessionStorage.setItem("cart", JSON.stringify(state.items));
     },
     clearCart(state) {
@@ -47,6 +77,11 @@ const cartSlice = createSlice({
   },
 });
 
-export const { addToCart, removeFromCart, clearCart, updateCartFromSession } =
-  cartSlice.actions;
+export const {
+  addToCart,
+  removeFromCart,
+  updateCartItemCount,
+  clearCart,
+  updateCartFromSession,
+} = cartSlice.actions;
 export default cartSlice.reducer;

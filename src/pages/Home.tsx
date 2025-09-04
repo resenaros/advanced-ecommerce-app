@@ -16,9 +16,20 @@ const Home: React.FC = () => {
   } = useProducts(category);
   const dispatch = useDispatch();
 
-  const handleAdd = (product: Product) => {
+  const handleAdd = (product: Product, quantity: number) => {
     const { id, title, price, category, description, image } = product;
-    dispatch(addToCart({ id, title, price, category, description, image }));
+    dispatch(
+      addToCart({
+        id,
+        title,
+        price,
+        category,
+        description,
+        image,
+        count: quantity,
+      })
+    );
+    // No need to show a message here, handled in ProductCard.
   };
 
   return (

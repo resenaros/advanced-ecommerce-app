@@ -1,23 +1,44 @@
-import React from "react";
+import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import type { RootState } from "../store";
-import { removeFromCart, clearCart } from "../features/cart/cartSlice";
-import CartItem from "../components/CartItem"; 
+import {
+  removeFromCart,
+  clearCart,
+  updateCartItemCount,
+} from "../features/cart/cartSlice";
+import CartItem from "../components/CartItem";
 
 const Cart: React.FC = () => {
   const items = useSelector((state: RootState) => state.cart.items);
   const dispatch = useDispatch();
+  const [message, setMessage] = useState<string>("");
+
   const total = items.reduce((sum, item) => sum + item.price * item.count, 0);
   const totalItems = items.reduce((sum, item) => sum + item.count, 0);
 
   const handleCheckout = () => {
     dispatch(clearCart());
-    alert("Checkout successful! Your cart has been cleared.");
+    setMessage("Checkout successful! Your cart has been cleared.");
+    setTimeout(() => setMessage(""), 1500);
+  };
+
+  const handleRemove = (id: number) => {
+    dispatch(removeFromCart(id));
+    setMessage("Items removed from cart.");
+    setTimeout(() => setMessage(""), 1500);
+  };
+
+  const handleCountUpdate = (id: number, count: number) => {
+    dispatch(updateCartItemCount({ id, count }));
+    setTimeout(() => setMessage(""), 1200);
   };
 
   return (
     <div>
       <h2>Shopping Cart</h2>
+      {message && (
+        <div style={{ color: "green", marginBottom: "1rem" }}>{message}</div>
+      )}
       {items.length === 0 ? (
         <p>Your cart is empty.</p>
       ) : (
@@ -26,7 +47,8 @@ const Cart: React.FC = () => {
             <CartItem
               key={item.id}
               item={item}
-              onRemove={(id) => dispatch(removeFromCart(id))}
+              onRemove={handleRemove}
+              onCountUpdate={handleCountUpdate}
             />
           ))}
         </ul>
