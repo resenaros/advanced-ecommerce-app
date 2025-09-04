@@ -28,70 +28,58 @@ const CartItem: React.FC<CartItemProps> = ({
   };
 
   return (
-    <li
-      style={{
-        display: "flex",
-        alignItems: "center", // center items vertically
-        marginBottom: "1rem",
-        minHeight: "50px",
-      }}
-    >
-      {item.image && (
-        <div
-          style={{
-            width: 48,
-            height: 48,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            marginRight: "1rem",
-            background: "#fafafa",
-            borderRadius: "4px",
-            border: "1px solid #eee",
-          }}
-        >
+    <tr>
+      <td className="align-middle text-center" style={{ minWidth: 100 }}>
+        {item.image && (
           <img
             src={item.image}
             alt={item.title}
             style={{
-              maxWidth: "40px",
-              maxHeight: "40px",
+              maxWidth: "80px",
+              maxHeight: "80px",
               objectFit: "contain",
               display: "block",
+              margin: "1rem auto",
             }}
           />
-        </div>
-      )}
-      <div style={{ flex: 1 }}>
+        )}
+      </td>
+      <td className="align-middle" style={{ minWidth: 220 }}>
         <strong>{item.title}</strong>
-        <div>
-          Quantity:&nbsp;
-          <input
-            type="number"
-            min={1}
-            value={localCount}
-            onChange={handleCountChange}
-            style={{ width: 50 }}
-          />
-          &nbsp;|&nbsp;Price: <span>${item.price.toFixed(2)}</span>
-          &nbsp;|&nbsp;Subtotal:{" "}
-          <span>${(item.price * localCount).toFixed(2)}</span>
-        </div>
-      </div>
-      <button
-        onClick={() => onRemove(item.id)}
-        style={{
-          marginLeft: "1rem",
-          padding: "0.25rem 0.75rem",
-          borderRadius: "4px",
-          background: "#e74c3c",
-          color: "#fff",
-          border: "none",
-        }}
-      >
-        Remove
-      </button>
-    </li>
+      </td>
+      <td className="align-middle text-center" style={{ minWidth: 120 }}>
+        <input
+          type="number"
+          min={1}
+          value={localCount}
+          onChange={handleCountChange}
+          style={{ width: 60 }}
+          className="mx-1"
+        />
+      </td>
+      <td className="align-middle text-center" style={{ minWidth: 100 }}>
+        ${item.price.toFixed(2)}
+      </td>
+      <td className="align-middle text-center" style={{ minWidth: 100 }}>
+        ${(item.price * localCount).toFixed(2)}
+      </td>
+      <td className="align-middle text-center" style={{ minWidth: 100 }}>
+        <button
+          className="m-2"
+          onClick={() => onRemove(item.id)}
+          style={{
+            padding: "0.25rem 0.75rem",
+            borderRadius: "4px",
+            background: "#e74c3c",
+            color: "#fff",
+            border: "none",
+            minWidth: "80px",
+          }}
+        >
+          Remove
+        </button>
+      </td>
+    </tr>
   );
 };
 

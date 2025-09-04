@@ -7,6 +7,7 @@ import {
   updateCartItemCount,
 } from "../features/cart/cartSlice";
 import CartItem from "../components/CartItem";
+import { Container, Row, Col } from "react-bootstrap";
 
 const Cart: React.FC = () => {
   const items = useSelector((state: RootState) => state.cart.items);
@@ -34,31 +35,43 @@ const Cart: React.FC = () => {
   };
 
   return (
-    <div>
-      <h2>Shopping Cart</h2>
-      {message && (
-        <div style={{ color: "green", marginBottom: "1rem" }}>{message}</div>
-      )}
-      {items.length === 0 ? (
-        <p>Your cart is empty.</p>
-      ) : (
-        <ul>
-          {items.map((item) => (
-            <CartItem
-              key={item.id}
-              item={item}
-              onRemove={handleRemove}
-              onCountUpdate={handleCountUpdate}
-            />
-          ))}
-        </ul>
-      )}
-      <p>Total Items: {totalItems}</p>
-      <p>Total Price: ${total.toFixed(2)}</p>
-      <button onClick={handleCheckout} disabled={items.length === 0}>
-        Checkout
-      </button>
-    </div>
+    <Container className="my-5">
+      <Row className="justify-content-center">
+        <Col md={8} className="mx-auto">
+          <h2 className="mb-4 text-center">Shopping Cart</h2>
+          {message && (
+            <div style={{ color: "green", marginBottom: "1rem" }}>
+              {message}
+            </div>
+          )}
+          {items.length === 0 ? (
+            <p className="text-center">Your cart is empty.</p>
+          ) : (
+            <ul className="list-unstyled w-100">
+              {items.map((item) => (
+                <CartItem
+                  key={item.id}
+                  item={item}
+                  onRemove={handleRemove}
+                  onCountUpdate={handleCountUpdate}
+                />
+              ))}
+            </ul>
+          )}
+          <div className="text-center mt-4">
+            <p>Total Items: {totalItems}</p>
+            <p>Total Price: ${total.toFixed(2)}</p>
+            <button
+              className="btn btn-primary"
+              onClick={handleCheckout}
+              disabled={items.length === 0}
+            >
+              Checkout
+            </button>
+          </div>
+        </Col>
+      </Row>
+    </Container>
   );
 };
 
