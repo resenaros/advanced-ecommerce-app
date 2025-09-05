@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import type { UseQueryResult } from "@tanstack/react-query";
 
+//  Define the structure of a product
 export interface Product {
   id: number;
   title: string;
@@ -14,6 +15,7 @@ export interface Product {
   };
 }
 
+// Fetch products with optional category filter
 export function useProducts(
   category?: string
 ): UseQueryResult<Product[], Error> {
@@ -34,6 +36,7 @@ export function useProducts(
   });
 }
 
+// Fetch product categories
 export function useCategories() {
   return useQuery<string[]>({
     queryKey: ["categories"],

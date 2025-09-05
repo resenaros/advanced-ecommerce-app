@@ -11,6 +11,8 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 
 const queryClient = new QueryClient();
 
+// MARK: App Component
+// Redux store is provided to the entire app using the Provider component
 const App: React.FC = () => (
   <Provider store={store}>
     <QueryClientProvider client={queryClient}>

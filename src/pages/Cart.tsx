@@ -10,30 +10,37 @@ import CartItem from "../components/CartItem";
 import { Container, Row, Col } from "react-bootstrap";
 
 const Cart: React.FC = () => {
+    // Get cart items from Redux store
   const items = useSelector((state: RootState) => state.cart.items);
   const dispatch = useDispatch();
+  //   Message to show user feedback
   const [message, setMessage] = useState<string>("");
 
+  //   Total price and item count
   const total = items.reduce((sum, item) => sum + item.price * item.count, 0);
   const totalItems = items.reduce((sum, item) => sum + item.count, 0);
 
+  // Handle checkout process
   const handleCheckout = () => {
     dispatch(clearCart());
     setMessage("Checkout successful! Your cart has been cleared.");
     setTimeout(() => setMessage(""), 1500);
   };
 
+//   Removes an item from the cart
   const handleRemove = (id: number) => {
     dispatch(removeFromCart(id));
     setMessage("Items removed from cart.");
     setTimeout(() => setMessage(""), 1500);
   };
 
+  // Updates the quantity of an item in the cart
   const handleCountUpdate = (id: number, count: number) => {
     dispatch(updateCartItemCount({ id, count }));
     setTimeout(() => setMessage(""), 1200);
   };
 
+  // Renders the cart items
   return (
     <Container className="my-5">
       <Row className="justify-content-center">

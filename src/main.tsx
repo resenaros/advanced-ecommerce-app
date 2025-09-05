@@ -4,6 +4,7 @@ import App from "./App";
 
 const queryClient = new QueryClient();
 
+// Wrap the application in the QueryClientProvider
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <QueryClientProvider client={queryClient}>
     <App />

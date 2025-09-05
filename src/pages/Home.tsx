@@ -7,6 +7,7 @@ import ProductCard from "../components/ProductCard";
 import CategorySelect from "../components/CategorySelect";
 import { Container, Row, Col, Pagination } from "react-bootstrap";
 
+// Max number of items to show per page. Grid is responsive based on screen size
 const ITEMS_PER_PAGE = 6;
 
 const Home: React.FC = () => {
