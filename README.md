@@ -1,69 +1,77 @@
-# React + TypeScript + Vite
+# Advanced React E-Commerce Web App
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This project is a fully-featured e-commerce web application built with **React** and **TypeScript**, leveraging **Redux Toolkit** for state management and **React Query** for efficient data fetching. It connects to the [FakeStoreAPI](https://fakestoreapi.com/) to simulate real-world product and category data, demonstrating advanced front-end development patterns.
 
-Currently, two official plugins are available:
+## 🚀 Technologies Used
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- **React** - Fast, component-based UI
+- **TypeScript** - Type safety throughout the codebase
+- **Redux Toolkit** - Centralized state management for the shopping cart
+- **React Query** - Asynchronous data fetching, caching, and error handling
+- **Bootstrap** - Responsive and clean layout
+- **FakeStoreAPI** - Mock product and category data
 
-## Expanding the ESLint configuration
+## 🛒 Features
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+- **Product Catalog**
+  - Displays all products with title, price, category, description, rating, and image.
+  - Handles image errors gracefully with placeholder images.
+  - Pagination for browsing large product lists.
+- **Category Navigation**
+  - Dynamic category dropdown fetched from the API.
+  - Instantly filters products by selected category.
+- **Shopping Cart**
+  - Add products to cart directly from the catalog.
+  - View and manage cart items (update quantity, remove items).
+  - Live cart item count in the navbar.
+  - Cart persists across sessions using `sessionStorage`.
+  - Dynamic calculation of total items and total price.
+- **Checkout Simulation**
+  - Simulate checkout by clearing cart and session.
+  - Visual feedback on successful checkout.
+- **Robust Error Handling**
+  - Loading and error states for all API calls.
+  - Fallback images for broken product image URLs.
 
-```js
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+## 📦 Getting Started
 
-      // Remove tseslint.configs.recommended and replace with this
-      ...tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      ...tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      ...tseslint.configs.stylisticTypeChecked,
+1. **Clone the repository**
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+   ```bash
+   git clone https://github.com/resenaros/advanced-ecommerce-app.git
+   cd advanced-ecommerce-app
+   ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+2. **Install dependencies**
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+   ```bash
+   npm install
+ 
+3. **Run the development server**
 
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+   ```bash
+   npm run dev
+
+
+## 📁 Project Structure
+
+- `src/store.ts` - Redux store setup
+- `src/features/cart/cartslice.ts` - Redux Toolkit cart slice
+- `src/api/products.ts` - React Query hooks for products and categories
+- `src/components/ProductCard.tsx` - Product display card
+- `src/components/CartItem.tsx` - Individual cart item component
+- `src/components/CategorySelect.tsx` - Category dropdown
+- `src/components/Navbar.tsx` - Navigation bar
+- `src/pages/Home.tsx` - Product catalog page
+- `src/pages/Cart.tsx` - Shopping cart page
+- `src/App.tsx` - App entry point and routing
+- `src/main.tsx` - Main entry file
+
+## 📚 Advanced Concepts Demonstrated
+
+- **Centralized Cart State:** All cart actions are handled via Redux Toolkit for predictable, scalable state changes.
+- **Session Persistence:** Cart state is stored in `sessionStorage` and restored on app load.
+- **Efficient Data Fetching:** React Query caches product/category results, handles refetching and errors.
+- **Responsive UI:** Bootstrap-based layout adjusts to any device size.
+- **Graceful Degradation:** Broken product images are replaced with placeholders, ensuring a consistent look.
+
