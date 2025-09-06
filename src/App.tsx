@@ -8,6 +8,11 @@ import Navbar from "./components/NavBar";
 import Home from "./pages/Home";
 import Cart from "./pages/Cart";
 import 'bootstrap/dist/css/bootstrap.min.css';
+// Note: these imports need to be implemented
+// import { onAuthStateChanged, User } from "firebase/auth";
+// import { auth } from "./firebaseConfig";
+// import Register from "./Register";
+// import Login from "./Login";
 
 const queryClient = new QueryClient();
 
