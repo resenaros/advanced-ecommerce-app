@@ -1,3 +1,4 @@
+// src/api/products.ts
 import { useQuery } from "@tanstack/react-query";
 import type { UseQueryResult } from "@tanstack/react-query";
 

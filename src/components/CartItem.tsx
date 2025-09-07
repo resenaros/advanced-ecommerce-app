@@ -1,3 +1,4 @@
+// src/components/CartItem.tsx
 import React, { useState } from "react";
 
 export interface CartItemType {

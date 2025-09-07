@@ -1,3 +1,4 @@
+// src/components/Register.tsx
 import { useState } from "react";
 import type { FormEvent } from "react";
 import { createUserWithEmailAndPassword } from "firebase/auth";

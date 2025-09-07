@@ -1,3 +1,4 @@
+// src/components/Login.tsx
 import { useState } from "react";
 import type { FormEvent } from "react";
 import { signInWithEmailAndPassword, signOut } from "firebase/auth";

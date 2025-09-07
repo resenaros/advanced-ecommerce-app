@@ -1,3 +1,4 @@
+// src/pages/Cart.tsx
 import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import type { RootState } from "../store";

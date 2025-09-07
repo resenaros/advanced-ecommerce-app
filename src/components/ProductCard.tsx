@@ -1,3 +1,4 @@
+// src/components/ProductCard.tsx
 import React, { useState } from "react";
 import type { Product } from "../api/products";
 import { Card, Button, Form, Alert } from "react-bootstrap";
