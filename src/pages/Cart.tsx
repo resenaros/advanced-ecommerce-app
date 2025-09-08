@@ -9,39 +9,63 @@ import {
 } from "../features/cart/cartSlice";
 import CartItem from "../components/CartItem";
 import { Container, Row, Col } from "react-bootstrap";
+import { db } from "../firebaseConfig";
+import { addDoc, collection } from "firebase/firestore";
+import { useAuth } from "../context/AuthContext";
 
 const Cart: React.FC = () => {
-    // Get cart items from Redux store
   const items = useSelector((state: RootState) => state.cart.items);
   const dispatch = useDispatch();
-  //   Message to show user feedback
   const [message, setMessage] = useState<string>("");
+  const { user } = useAuth();
 
-  //   Total price and item count
   const total = items.reduce((sum, item) => sum + item.price * item.count, 0);
   const totalItems = items.reduce((sum, item) => sum + item.count, 0);
 
-  // Handle checkout process
-  const handleCheckout = () => {
-    dispatch(clearCart());
-    setMessage("Checkout successful! Your cart has been cleared.");
-    setTimeout(() => setMessage(""), 1500);
+  // Handle checkout process and save order to Firestore
+  const handleCheckout = async () => {
+    if (!user) {
+      setMessage("You must be logged in to place an order.");
+      setTimeout(() => setMessage(""), 1500);
+      return;
+    }
+    const order = {
+      userId: user.uid,
+      items: items.map((item) => ({
+        id: item.id,
+        title: item.title,
+        price: item.price,
+        count: item.count,
+        image: item.image,
+        category: item.category,
+        description: item.description,
+      })),
+      totalPrice: total,
+      createdAt: new Date().toISOString(),
+    };
+    try {
+      await addDoc(collection(db, "orders"), order);
+      dispatch(clearCart());
+      setMessage("Checkout successful! Your order has been placed.");
+      setTimeout(() => setMessage(""), 1500);
+    } catch (error) {
+      console.log("Order placement error:", error);
+      setMessage("Error placing order. Please try again.");
+      setTimeout(() => setMessage(""), 1500);
+    }
   };
 
-//   Removes an item from the cart
   const handleRemove = (id: number) => {
     dispatch(removeFromCart(id));
     setMessage("Items removed from cart.");
     setTimeout(() => setMessage(""), 1500);
   };
 
-  // Updates the quantity of an item in the cart
   const handleCountUpdate = (id: number, count: number) => {
     dispatch(updateCartItemCount({ id, count }));
     setTimeout(() => setMessage(""), 1200);
   };
 
-  // Renders the cart items
   return (
     <Container className="my-5">
       <Row className="justify-content-center">

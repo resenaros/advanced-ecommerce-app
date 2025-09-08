@@ -7,6 +7,8 @@ import { auth } from "../firebaseConfig";
 import type { FirebaseError } from "firebase/app";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import { doc, setDoc } from "firebase/firestore";
+import { db } from "../firebaseConfig"; // Import Firestore instance
 
 const Register = () => {
   const [email, setEmail] = useState<string>("");
@@ -22,7 +24,20 @@ const Register = () => {
     setError(null);
     setSuccess(false);
     try {
-      await createUserWithEmailAndPassword(auth, email, password);
+      // 1. Create user in Firebase Auth
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+      const user = userCredential.user;
+      // 2. Create Firestore document for user profile
+      // You can add more fields here (e.g., name, address) if needed
+      await setDoc(doc(db, "users", user.uid), {
+        uid: user.uid,
+        email: user.email,
+        createdAt: new Date().toISOString(),
+      });
       setSuccess(true);
       setError(null);
       // Redirect to home after registration

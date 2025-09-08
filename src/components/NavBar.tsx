@@ -23,10 +23,18 @@ const Navbar: React.FC = () => {
               Home
             </Button>
           </Link>
+          <Link to="/products" style={{ textDecoration: "none" }}>
+            <Button
+              variant="outline-dark"
+              style={{ fontWeight: 500, fontSize: "18px", marginLeft: 8 }}
+            >
+              Products
+            </Button>
+          </Link>
           <Link to="/cart" style={{ textDecoration: "none" }}>
             <Button
               variant="primary"
-              style={{ fontWeight: 500, fontSize: "18px" }}
+              style={{ fontWeight: 500, fontSize: "18px", marginLeft: 8 }}
             >
               Cart{" "}
               {totalCount > 0 && (
@@ -39,6 +47,22 @@ const Navbar: React.FC = () => {
           {/* Show these links only if user is logged in */}
           {user && (
             <>
+              <Link to="/orders" style={{ textDecoration: "none" }}>
+                <Button
+                  variant="outline-warning"
+                  style={{ fontWeight: 500, fontSize: "18px", marginLeft: 8 }}
+                >
+                  Orders
+                </Button>
+              </Link>
+              <Link to="/product-manager" style={{ textDecoration: "none" }}>
+                <Button
+                  variant="outline-info"
+                  style={{ fontWeight: 500, fontSize: "18px", marginLeft: 8 }}
+                >
+                  Product Manager
+                </Button>
+              </Link>
               <Link to="/users" style={{ textDecoration: "none" }}>
                 <Button
                   variant="outline-success"

@@ -15,15 +15,10 @@ import AddDataForm from "./components/AddDataForm";
 import { AuthProvider } from "./context/AuthContext";
 import "bootstrap/dist/css/bootstrap.min.css";
 import ProtectedRoute from "./components/ProtectedRoute";
+import ProductManager from "./components/ProductManager";
+import OrderHistory from "./pages/OrderHistory";
+import Products from "./pages/Products";
 
-/**
- * Main App Component
- * - Provides Redux store and React Query context to the whole app
- * - Sets up client-side routing for all main pages and features
- * - Includes NavBar, Home, Cart, Register, Login, DisplayData, and AddDataForm pages
- * - Now wraps app in AuthProvider for authentication state
- * - Uses ProtectedRoute for authenticated-only pages
- */
 const queryClient = new QueryClient();
 
 const App: React.FC = () => (
@@ -37,6 +32,17 @@ const App: React.FC = () => (
           {/* Define all major routes */}
           <Routes>
             <Route path="/" element={<Home />} />
+            {/* Product catalog for all users */}
+            <Route path="/products" element={<Products />} />
+            {/* Product admin/CRUD panel, protected route */}
+            <Route
+              path="/product-manager"
+              element={
+                <ProtectedRoute>
+                  <ProductManager />
+                </ProtectedRoute>
+              }
+            />
             {/* Protected routes */}
             <Route
               path="/cart"
@@ -59,6 +65,14 @@ const App: React.FC = () => (
               element={
                 <ProtectedRoute>
                   <AddDataForm />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/orders"
+              element={
+                <ProtectedRoute>
+                  <OrderHistory />
                 </ProtectedRoute>
               }
             />
