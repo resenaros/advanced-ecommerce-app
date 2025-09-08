@@ -8,15 +8,17 @@ import type { FirebaseError } from "firebase/app";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { doc, setDoc } from "firebase/firestore";
-import { db } from "../firebaseConfig"; // Import Firestore instance
+import { db } from "../firebaseConfig";
 
 const Register = () => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
+  const [name, setName] = useState<string>("");
+  const [address, setAddress] = useState<string>("");
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<boolean>(false);
   const navigate = useNavigate();
-  const { loading } = useAuth(); // Use loading from AuthContext for initial auth state
+  const { loading } = useAuth();
 
   // Use FirebaseError for error type instead of 'any'
   const handleRegister = async (e: FormEvent) => {
@@ -24,18 +26,19 @@ const Register = () => {
     setError(null);
     setSuccess(false);
     try {
-      // 1. Create user in Firebase Auth
+      // Create user in Firebase Auth
       const userCredential = await createUserWithEmailAndPassword(
         auth,
         email,
         password
       );
       const user = userCredential.user;
-      // 2. Create Firestore document for user profile
-      // You can add more fields here (e.g., name, address) if needed
+      // Create Firestore document for user profile
       await setDoc(doc(db, "users", user.uid), {
         uid: user.uid,
         email: user.email,
+        name,
+        address,
         createdAt: new Date().toISOString(),
       });
       setSuccess(true);
@@ -52,21 +55,45 @@ const Register = () => {
   if (loading) return <div>Loading...</div>;
 
   return (
-    <form onSubmit={handleRegister}>
+    <form
+      onSubmit={handleRegister}
+      style={{ maxWidth: 400, margin: "2rem auto" }}
+    >
       <input
         type="email"
         placeholder="Email"
         value={email}
+        required
         onChange={(e) => setEmail(e.target.value)}
+        style={{ width: "100%", marginBottom: 12 }}
       />
       <input
         type="password"
         placeholder="Password"
         value={password}
+        required
         onChange={(e) => setPassword(e.target.value)}
+        style={{ width: "100%", marginBottom: 12 }}
       />
-      <button type="submit">Register</button>
-      {/* Show success message after registration */}
+      <input
+        type="text"
+        placeholder="Name"
+        value={name}
+        required
+        onChange={(e) => setName(e.target.value)}
+        style={{ width: "100%", marginBottom: 12 }}
+      />
+      <input
+        type="text"
+        placeholder="Address"
+        value={address}
+        required
+        onChange={(e) => setAddress(e.target.value)}
+        style={{ width: "100%", marginBottom: 12 }}
+      />
+      <button type="submit" style={{ width: "100%" }}>
+        Register
+      </button>
       {success && (
         <p style={{ color: "green" }}>
           Registration successful! Redirecting...

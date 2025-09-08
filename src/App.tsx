@@ -10,14 +10,13 @@ import Home from "./pages/Home";
 import Cart from "./pages/Cart";
 import Register from "./components/Register";
 import Login from "./components/Login";
-import DisplayData from "./components/DisplayData";
-import AddDataForm from "./components/AddDataForm";
 import { AuthProvider } from "./context/AuthContext";
 import "bootstrap/dist/css/bootstrap.min.css";
 import ProtectedRoute from "./components/ProtectedRoute";
 import ProductManager from "./components/ProductManager";
 import OrderHistory from "./pages/OrderHistory";
 import Products from "./pages/Products";
+import Profile from "./pages/Profile";
 
 const queryClient = new QueryClient();
 
@@ -45,26 +44,18 @@ const App: React.FC = () => (
             />
             {/* Protected routes */}
             <Route
+              path="/profile"
+              element={
+                <ProtectedRoute>
+                  <Profile />
+                </ProtectedRoute>
+              }
+            />
+            <Route
               path="/cart"
               element={
                 <ProtectedRoute>
                   <Cart />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/users"
-              element={
-                <ProtectedRoute>
-                  <DisplayData />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/add-user"
-              element={
-                <ProtectedRoute>
-                  <AddDataForm />
                 </ProtectedRoute>
               }
             />

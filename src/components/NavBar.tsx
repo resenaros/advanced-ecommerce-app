@@ -47,6 +47,14 @@ const Navbar: React.FC = () => {
           {/* Show these links only if user is logged in */}
           {user && (
             <>
+              <Link to="/profile" style={{ textDecoration: "none" }}>
+                <Button
+                  variant="outline-info"
+                  style={{ fontWeight: 500, fontSize: "18px", marginLeft: 8 }}
+                >
+                  Profile
+                </Button>
+              </Link>
               <Link to="/orders" style={{ textDecoration: "none" }}>
                 <Button
                   variant="outline-warning"
@@ -61,22 +69,6 @@ const Navbar: React.FC = () => {
                   style={{ fontWeight: 500, fontSize: "18px", marginLeft: 8 }}
                 >
                   Product Manager
-                </Button>
-              </Link>
-              <Link to="/users" style={{ textDecoration: "none" }}>
-                <Button
-                  variant="outline-success"
-                  style={{ fontWeight: 500, fontSize: "18px", marginLeft: 8 }}
-                >
-                  Users
-                </Button>
-              </Link>
-              <Link to="/add-user" style={{ textDecoration: "none" }}>
-                <Button
-                  variant="outline-info"
-                  style={{ fontWeight: 500, fontSize: "18px", marginLeft: 8 }}
-                >
-                  Add User
                 </Button>
               </Link>
             </>
