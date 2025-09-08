@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 
 export interface CartItemType {
-  id: number;
+  id: string;
   title: string;
   price: number;
   count: number;
@@ -11,8 +11,8 @@ export interface CartItemType {
 
 interface CartItemProps {
   item: CartItemType;
-  onRemove: (id: number) => void;
-  onCountUpdate: (id: number, count: number) => void;
+  onRemove: (id: string) => void;
+  onCountUpdate: (id: string, count: number) => void;
 }
 
 const CartItem: React.FC<CartItemProps> = ({

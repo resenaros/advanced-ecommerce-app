@@ -55,13 +55,15 @@ const Cart: React.FC = () => {
     }
   };
 
-  const handleRemove = (id: number) => {
+  // FIX: Change id from number to string
+  const handleRemove = (id: string) => {
     dispatch(removeFromCart(id));
     setMessage("Items removed from cart.");
     setTimeout(() => setMessage(""), 1500);
   };
 
-  const handleCountUpdate = (id: number, count: number) => {
+  // FIX: Change id from number to string
+  const handleCountUpdate = (id: string, count: number) => {
     dispatch(updateCartItemCount({ id, count }));
     setTimeout(() => setMessage(""), 1200);
   };

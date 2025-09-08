@@ -1,14 +1,23 @@
 // src/components/ProductCard.tsx
 import React, { useState } from "react";
-import type { Product } from "../api/products";
 import { Card, Button, Form, Alert } from "react-bootstrap";
 
-const PLACEHOLDER_IMAGE = "https://via.placeholder.com/100?text=No+Image";
+// Define Product type to match your Firestore products
+export interface Product {
+  id: string;
+  title: string;
+  price: number;
+  category: string;
+  description: string;
+  image: string;
+}
 
 interface ProductCardProps {
   product: Product;
   onAdd: (product: Product, quantity: number) => void;
 }
+
+const PLACEHOLDER_IMAGE = "https://via.placeholder.com/100?text=No+Image";
 
 const ProductCard: React.FC<ProductCardProps> = ({ product, onAdd }) => {
   const [quantity, setQuantity] = useState<number>(1);
@@ -131,12 +140,6 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onAdd }) => {
               style={{ minHeight: 42, fontSize: "0.92rem" }}
             >
               {product.description}
-            </Card.Text>
-            <Card.Text
-              className="mb-3 text-center"
-              style={{ fontSize: "0.95rem" }}
-            >
-              Rating: {product.rating?.rate}
             </Card.Text>
           </div>
         </div>

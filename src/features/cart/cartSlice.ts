@@ -2,10 +2,9 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 
-// Defines all logic related to the cart
-// Define structure for cart items
+// Define structure for cart items using Firestore string IDs
 export interface CartItem {
-  id: number;
+  id: string;
   title: string;
   price: number;
   category: string;
@@ -55,17 +54,18 @@ const cartSlice = createSlice({
           count,
         });
       }
-        // Update session storage whenever item is added 
+      // Update session storage whenever item is added
       sessionStorage.setItem("cart", JSON.stringify(state.items));
     },
-    removeFromCart(state, action: PayloadAction<number>) {
+    removeFromCart(state, action: PayloadAction<string>) {
+      // <-- id is now string
       state.items = state.items.filter((item) => item.id !== action.payload);
       // Update session storage whenever item is removed
       sessionStorage.setItem("cart", JSON.stringify(state.items));
     },
     updateCartItemCount(
       state,
-      action: PayloadAction<{ id: number; count: number }>
+      action: PayloadAction<{ id: string; count: number }> // <-- id is now string
     ) {
       const { id, count } = action.payload;
       const item = state.items.find((item) => item.id === id);
@@ -77,11 +77,11 @@ const cartSlice = createSlice({
     },
     clearCart(state) {
       state.items = [];
-        // Clear session storage when cart is cleared
+      // Clear session storage when cart is cleared
       sessionStorage.setItem("cart", JSON.stringify(state.items));
     },
     updateCartFromSession(state) {
-        // Sync cart state with session storage
+      // Sync cart state with session storage
       state.items = JSON.parse(sessionStorage.getItem("cart") || "[]");
     },
   },
