@@ -1,7 +1,8 @@
 // src/context/AuthContext.tsx
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { auth } from "../firebaseConfig";
-import { User, onAuthStateChanged, signOut } from "firebase/auth";
+import { onAuthStateChanged, signOut } from "firebase/auth";
+import type { User } from "firebase/auth";
 
 // Context value type
 interface AuthContextValue {
@@ -17,6 +18,7 @@ const AuthContext = createContext<AuthContextValue>({
   logout: async () => {},
 });
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const useAuth = () => useContext(AuthContext);
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({

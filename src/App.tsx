@@ -14,18 +14,22 @@ import DisplayData from "./components/DisplayData";
 import AddDataForm from "./components/AddDataForm";
 import { AuthProvider } from "./context/AuthContext";
 import "bootstrap/dist/css/bootstrap.min.css";
-
-const queryClient = new QueryClient();
+import ProtectedRoute from "./components/ProtectedRoute";
 
 /**
  * Main App Component
  * - Provides Redux store and React Query context to the whole app
  * - Sets up client-side routing for all main pages and features
  * - Includes NavBar, Home, Cart, Register, Login, DisplayData, and AddDataForm pages
+ * - Now wraps app in AuthProvider for authentication state
+ * - Uses ProtectedRoute for authenticated-only pages
  */
+const queryClient = new QueryClient();
+
 const App: React.FC = () => (
   <Provider store={store}>
     <QueryClientProvider client={queryClient}>
+      {/* AuthProvider wraps whole app for global auth state */}
       <AuthProvider>
         <Router>
           {/* Global Navigation Bar */}
@@ -33,11 +37,34 @@ const App: React.FC = () => (
           {/* Define all major routes */}
           <Routes>
             <Route path="/" element={<Home />} />
-            <Route path="/cart" element={<Cart />} />
+            {/* Protected routes */}
+            <Route
+              path="/cart"
+              element={
+                <ProtectedRoute>
+                  <Cart />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/users"
+              element={
+                <ProtectedRoute>
+                  <DisplayData />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/add-user"
+              element={
+                <ProtectedRoute>
+                  <AddDataForm />
+                </ProtectedRoute>
+              }
+            />
+            {/* Public routes */}
             <Route path="/register" element={<Register />} />
             <Route path="/login" element={<Login />} />
-            <Route path="/users" element={<DisplayData />} />
-            <Route path="/add-user" element={<AddDataForm />} />
           </Routes>
         </Router>
         {/* React Query Devtools for debugging (optional, remove in production) */}
