@@ -55,14 +55,12 @@ const Cart: React.FC = () => {
     }
   };
 
-  // FIX: Change id from number to string
   const handleRemove = (id: string) => {
     dispatch(removeFromCart(id));
     setMessage("Items removed from cart.");
     setTimeout(() => setMessage(""), 1500);
   };
 
-  // FIX: Change id from number to string
   const handleCountUpdate = (id: string, count: number) => {
     dispatch(updateCartItemCount({ id, count }));
     setTimeout(() => setMessage(""), 1200);
@@ -81,16 +79,28 @@ const Cart: React.FC = () => {
           {items.length === 0 ? (
             <p className="text-center">Your cart is empty.</p>
           ) : (
-            <ul className="list-unstyled w-100">
-              {items.map((item) => (
-                <CartItem
-                  key={item.id}
-                  item={item}
-                  onRemove={handleRemove}
-                  onCountUpdate={handleCountUpdate}
-                />
-              ))}
-            </ul>
+            <table className="table table-bordered w-100">
+              <thead>
+                <tr>
+                  <th style={{ minWidth: 100 }}>Image</th>
+                  <th style={{ minWidth: 220 }}>Title</th>
+                  <th style={{ minWidth: 120 }}>Quantity</th>
+                  <th style={{ minWidth: 100 }}>Price</th>
+                  <th style={{ minWidth: 100 }}>Subtotal</th>
+                  <th style={{ minWidth: 100 }}>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {items.map((item) => (
+                  <CartItem
+                    key={item.id}
+                    item={item}
+                    onRemove={handleRemove}
+                    onCountUpdate={handleCountUpdate}
+                  />
+                ))}
+              </tbody>
+            </table>
           )}
           <div className="text-center mt-4">
             <p>Total Items: {totalItems}</p>
