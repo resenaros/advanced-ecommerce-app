@@ -13,10 +13,11 @@ import {
 // Product type for TypeScript
 type Product = {
   id?: string; // Firestore doc id
-  name: string;
+  title: string;
   price: number;
+  category: string;
   description: string;
-  ImageUrl: string;
+  image: string;
 };
 
 const ProductManager: React.FC = () => {
@@ -25,10 +26,11 @@ const ProductManager: React.FC = () => {
 
   // Form state for create/update
   const [form, setForm] = useState<Product>({
-    name: "",
+    title: "",
     price: 0,
+    category: "",
     description: "",
-    ImageUrl: "",
+    image: "",
   });
   const [editId, setEditId] = useState<string | null>(null);
 
@@ -41,10 +43,11 @@ const ProductManager: React.FC = () => {
       const data = docSnap.data();
       productsData.push({
         id: docSnap.id,
-        name: data.name,
+        title: data.title,
         price: data.price,
+        category: data.category,
         description: data.description,
-        ImageUrl: data.ImageUrl,
+        image: data.image,
       });
     });
     setProducts(productsData);
@@ -69,7 +72,7 @@ const ProductManager: React.FC = () => {
   const handleCreate = async (e: React.FormEvent) => {
     e.preventDefault();
     await addDoc(collection(db, "products"), form);
-    setForm({ name: "", price: 0, description: "", ImageUrl: "" });
+    setForm({ title: "", price: 0, category: "", description: "", image: "" });
     fetchProducts();
   };
 
@@ -86,7 +89,7 @@ const ProductManager: React.FC = () => {
     const productRef = doc(db, "products", editId);
     await updateDoc(productRef, form);
     setEditId(null);
-    setForm({ name: "", price: 0, description: "", ImageUrl: "" });
+    setForm({ title: "", price: 0, category: "", description: "", image: "" });
     fetchProducts();
   };
 
@@ -99,7 +102,7 @@ const ProductManager: React.FC = () => {
   // Cancel editing
   const cancelEdit = () => {
     setEditId(null);
-    setForm({ name: "", price: 0, description: "", ImageUrl: "" });
+    setForm({ title: "", price: 0, category: "", description: "", image: "" });
   };
 
   return (
@@ -109,9 +112,9 @@ const ProductManager: React.FC = () => {
       <form onSubmit={editId ? handleUpdate : handleCreate}>
         <input
           type="text"
-          name="name"
-          placeholder="Name"
-          value={form.name}
+          name="title"
+          placeholder="Title"
+          value={form.title}
           onChange={handleChange}
           required
         />
@@ -120,6 +123,14 @@ const ProductManager: React.FC = () => {
           name="price"
           placeholder="Price"
           value={form.price}
+          onChange={handleChange}
+          required
+        />
+        <input
+          type="text"
+          name="category"
+          placeholder="Category"
+          value={form.category}
           onChange={handleChange}
           required
         />
@@ -132,9 +143,9 @@ const ProductManager: React.FC = () => {
         />
         <input
           type="text"
-          name="ImageUrl"
+          name="image"
           placeholder="Image URL"
-          value={form.ImageUrl}
+          value={form.image}
           onChange={handleChange}
           required
         />
@@ -155,11 +166,13 @@ const ProductManager: React.FC = () => {
           {products.map((prod) => (
             <li key={prod.id}>
               <img
-                src={prod.ImageUrl}
-                alt={prod.name}
+                src={prod.image}
+                alt={prod.title}
                 style={{ width: 80, height: 80 }}
               />
-              <strong>{prod.name}</strong> (${prod.price})<br />
+              <strong>{prod.title}</strong> (${prod.price})<br />
+              <em>{prod.category}</em>
+              <br />
               <em>{prod.description}</em>
               <br />
               <button onClick={() => startEdit(prod)}>Edit</button>

@@ -51,12 +51,12 @@ const Products: React.FC = () => {
           const data = docSnap.data();
           productArray.push({
             id: docSnap.id,
-            title: data.title || data.name,
+            title: data.title,
             price:
               typeof data.price === "number" ? data.price : Number(data.price),
             category: data.category,
             description: data.description,
-            image: data.image || data.ImageUrl || "",
+            image: data.image,
           });
         });
         setProducts(productArray);

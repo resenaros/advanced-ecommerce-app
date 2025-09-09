@@ -6,7 +6,7 @@ import { useAuth } from "../context/AuthContext";
 import { Container, Row, Col, Button } from "react-bootstrap";
 
 type OrderItem = {
-  id: number;
+  id: string;
   title: string;
   price: number;
   count: number;
@@ -38,11 +38,18 @@ const OrderHistory: React.FC = () => {
       const fetchedOrders: Order[] = [];
       snapshot.forEach((docSnap) => {
         const data = docSnap.data();
+        // Ensure item IDs are strings (if you saved them as numbers before, coerce here)
+        const items: OrderItem[] = (data.items || []).map(
+          (item: Partial<OrderItem>) => ({
+            ...item,
+            id: String(item.id),
+          })
+        );
         fetchedOrders.push({
           id: docSnap.id,
           createdAt: data.createdAt,
           totalPrice: data.totalPrice,
-          items: data.items,
+          items,
         });
       });
       setOrders(fetchedOrders);
