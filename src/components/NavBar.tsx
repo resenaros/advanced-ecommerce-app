@@ -1,117 +1,126 @@
 // src/components/NavBar.tsx
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import type { RootState } from "../store";
-import { Container, Button, Badge, ButtonGroup } from "react-bootstrap";
+import {
+  Container,
+  Button,
+  Badge,
+  Navbar,
+  Nav,
+} from "react-bootstrap";
 import { useAuth } from "../context/AuthContext";
 
-const Navbar: React.FC = () => {
+const NavBar: React.FC = () => {
   const items = useSelector((state: RootState) => state.cart.items);
   const totalCount = items.reduce((sum, item) => sum + item.count, 0);
   const { user, logout } = useAuth();
+  const [expanded, setExpanded] = useState(false);
 
   return (
-    <Container fluid className="py-3 mb-4 d-flex justify-content-center">
-      <nav>
-        <ButtonGroup>
-          <Link to="/" className="me-2" style={{ textDecoration: "none" }}>
-            <Button
-              variant="outline-primary"
-              style={{ fontWeight: 500, fontSize: "18px" }}
-            >
+    <Navbar
+      bg="light"
+      expand="md"
+      expanded={expanded}
+      className="mb-4"
+      sticky="top"
+    >
+      <Container>
+        <Navbar.Brand
+          as={Link}
+          to="/"
+          style={{ fontWeight: 700, fontSize: 22 }}
+        >
+          MyShop
+        </Navbar.Brand>
+        <Navbar.Toggle
+          aria-controls="main-navbar"
+          onClick={() => setExpanded((prev) => !prev)}
+        />
+        <Navbar.Collapse id="main-navbar">
+          <Nav className="me-auto">
+            <Nav.Link as={Link} to="/" onClick={() => setExpanded(false)}>
               Home
-            </Button>
-          </Link>
-          <Link to="/products" style={{ textDecoration: "none" }}>
-            <Button
-              variant="outline-dark"
-              style={{ fontWeight: 500, fontSize: "18px", marginLeft: 8 }}
+            </Nav.Link>
+            <Nav.Link
+              as={Link}
+              to="/products"
+              onClick={() => setExpanded(false)}
             >
               Products
-            </Button>
-          </Link>
-          <Link to="/cart" style={{ textDecoration: "none" }}>
-            <Button
-              variant="primary"
-              style={{ fontWeight: 500, fontSize: "18px", marginLeft: 8 }}
-            >
+            </Nav.Link>
+            <Nav.Link as={Link} to="/cart" onClick={() => setExpanded(false)}>
               Cart{" "}
               {totalCount > 0 && (
                 <Badge bg="light" text="dark" className="ms-1">
                   {totalCount}
                 </Badge>
               )}
-            </Button>
-          </Link>
-          {/* Show these links only if user is logged in */}
-          {user && (
-            <>
-              <Link to="/profile" style={{ textDecoration: "none" }}>
-                <Button
-                  variant="outline-info"
-                  style={{ fontWeight: 500, fontSize: "18px", marginLeft: 8 }}
+            </Nav.Link>
+            {user && (
+              <>
+                <Nav.Link
+                  as={Link}
+                  to="/profile"
+                  onClick={() => setExpanded(false)}
                 >
                   Profile
-                </Button>
-              </Link>
-              <Link to="/orders" style={{ textDecoration: "none" }}>
-                <Button
-                  variant="outline-warning"
-                  style={{ fontWeight: 500, fontSize: "18px", marginLeft: 8 }}
+                </Nav.Link>
+                <Nav.Link
+                  as={Link}
+                  to="/orders"
+                  onClick={() => setExpanded(false)}
                 >
                   Orders
-                </Button>
-              </Link>
-              <Link to="/product-manager" style={{ textDecoration: "none" }}>
-                <Button
-                  variant="outline-info"
-                  style={{ fontWeight: 500, fontSize: "18px", marginLeft: 8 }}
+                </Nav.Link>
+                <Nav.Link
+                  as={Link}
+                  to="/product-manager"
+                  onClick={() => setExpanded(false)}
                 >
                   Product Manager
-                </Button>
-              </Link>
-            </>
-          )}
-          {/* Show Register/Login if not logged in */}
-          {!user && (
-            <>
-              <Link to="/register" style={{ textDecoration: "none" }}>
-                <Button
-                  variant="outline-secondary"
-                  style={{ fontWeight: 500, fontSize: "18px", marginLeft: 8 }}
+                </Nav.Link>
+              </>
+            )}
+            {!user && (
+              <>
+                <Nav.Link
+                  as={Link}
+                  to="/register"
+                  onClick={() => setExpanded(false)}
                 >
                   Register
-                </Button>
-              </Link>
-              <Link to="/login" style={{ textDecoration: "none" }}>
-                <Button
-                  variant="outline-secondary"
-                  style={{ fontWeight: 500, fontSize: "18px", marginLeft: 8 }}
+                </Nav.Link>
+                <Nav.Link
+                  as={Link}
+                  to="/login"
+                  onClick={() => setExpanded(false)}
                 >
                   Login
-                </Button>
-              </Link>
-            </>
+                </Nav.Link>
+              </>
+            )}
+          </Nav>
+          {user && (
+            <Nav className="align-items-center">
+              <Navbar.Text className="me-3 fw-bold">{user.email}</Navbar.Text>
+              <Button
+                variant="danger"
+                size="sm"
+                onClick={() => {
+                  logout();
+                  setExpanded(false);
+                }}
+              >
+                Logout
+              </Button>
+            </Nav>
           )}
-        </ButtonGroup>
-        {/* Show user email and logout button if logged in */}
-        {user && (
-          <span className="ms-3">
-            <strong>{user.email}</strong>
-            <Button
-              variant="danger"
-              size="sm"
-              className="ms-3"
-              onClick={logout}
-            >
-              Logout
-            </Button>
-          </span>
-        )}
-      </nav>
-    </Container>
+        </Navbar.Collapse>
+      </Container>
+    </Navbar>
   );
 };
 
-export default Navbar;
+export default NavBar;

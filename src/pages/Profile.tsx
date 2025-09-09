@@ -1,6 +1,6 @@
 // src/pages/Profile.tsx
 import React, { useEffect, useState } from "react";
-import { db } from "../firebaseConfig";
+import { db, auth } from "../firebaseConfig";
 import { useAuth } from "../context/AuthContext";
 import { doc, getDoc, updateDoc, deleteDoc } from "firebase/firestore";
 import { deleteUser } from "firebase/auth";
@@ -15,7 +15,7 @@ interface UserProfile {
 }
 
 const Profile: React.FC = () => {
-  const { user, loading } = useAuth();
+  const { user, loading, logout } = useAuth();
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [editData, setEditData] = useState<{ name?: string; address?: string }>(
     {}
@@ -67,20 +67,30 @@ const Profile: React.FC = () => {
 
   // Delete user account and Firestore document
   const handleDeleteAccount = async () => {
-    if (!user) return;
+    if (!auth.currentUser) {
+      setError("No current user found. Please log in again.");
+      return;
+    }
     setDeleting(true);
     setError(null);
     setFeedback(null);
     try {
       // Remove Firestore user doc
-      await deleteDoc(doc(db, "users", user.uid));
-      // Remove Firebase Auth user
-      await deleteUser(user);
+      await deleteDoc(doc(db, "users", auth.currentUser.uid));
+      // Remove Firebase Auth user (must use currentUser for deletion)
+      await deleteUser(auth.currentUser);
       setFeedback("Account deleted.");
-      setTimeout(() => navigate("/"), 1200);
+      // Sign out and redirect
+      await logout();
+      setTimeout(() => navigate("/login"), 1200);
     } catch (err) {
+      // Firebase will throw if token is expired or insufficient permissions
       console.error("Failed to delete account:", err);
-      setError("Failed to delete account.");
+      setError(
+        err instanceof Error
+          ? err.message
+          : "Failed to delete account. Please log in again and try."
+      );
     }
     setDeleting(false);
   };

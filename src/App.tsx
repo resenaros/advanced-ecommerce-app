@@ -31,8 +31,15 @@ const App: React.FC = () => (
           {/* Define all major routes */}
           <Routes>
             <Route path="/" element={<Home />} />
-            {/* Product catalog for all users */}
-            <Route path="/products" element={<Products />} />
+            {/* Product catalog PROTECTED for all users */}
+            <Route
+              path="/products"
+              element={
+                <ProtectedRoute>
+                  <Products />
+                </ProtectedRoute>
+              }
+            />
             {/* Product admin/CRUD panel, protected route */}
             <Route
               path="/product-manager"

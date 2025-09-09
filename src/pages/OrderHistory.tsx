@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { db } from "../firebaseConfig";
 import { collection, query, where, getDocs } from "firebase/firestore";
 import { useAuth } from "../context/AuthContext";
-import { Container, Row, Col, Button } from "react-bootstrap";
+import { Container, Row, Col, Button, Card } from "react-bootstrap";
 
 type OrderItem = {
   id: string;
@@ -27,6 +27,10 @@ const OrderHistory: React.FC = () => {
   const [orders, setOrders] = useState<Order[]>([]);
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
+  // Track image error per item
+  const [imageErrorIds, setImageErrorIds] = useState<Record<string, boolean>>(
+    {}
+  );
 
   useEffect(() => {
     const fetchOrders = async () => {
@@ -38,7 +42,6 @@ const OrderHistory: React.FC = () => {
       const fetchedOrders: Order[] = [];
       snapshot.forEach((docSnap) => {
         const data = docSnap.data();
-        // Ensure item IDs are strings (if you saved them as numbers before, coerce here)
         const items: OrderItem[] = (data.items || []).map(
           (item: Partial<OrderItem>) => ({
             ...item,
@@ -54,86 +57,179 @@ const OrderHistory: React.FC = () => {
       });
       setOrders(fetchedOrders);
       setLoading(false);
+      setImageErrorIds({});
     };
     fetchOrders();
   }, [user]);
 
-  if (!user) return <p>Please login to view your order history.</p>;
+  const handleImgError = (id: string) => {
+    setImageErrorIds((prev) => ({ ...prev, [id]: true }));
+  };
+
+  if (!user)
+    return (
+      <Container
+        className="d-flex justify-content-center align-items-center"
+        style={{ minHeight: "70vh" }}
+      >
+        <Row className="w-100 justify-content-center">
+          <Col md={8} lg={6} className="text-center">
+            <p>Please login to view your order history.</p>
+          </Col>
+        </Row>
+      </Container>
+    );
 
   return (
-    <Container>
-      <Row className="justify-content-center">
-        <Col md={8}>
+    <Container
+      className="d-flex flex-column align-items-center justify-content-center"
+      style={{ minHeight: "80vh" }}
+    >
+      <Row className="w-100 justify-content-center">
+        <Col md={8} lg={6} className="d-flex flex-column align-items-center">
           <h2 className="mb-4 text-center">Order History</h2>
           {loading ? (
-            <p>Loading orders...</p>
+            <div className="text-center">Loading orders...</div>
           ) : orders.length === 0 ? (
-            <p>No previous orders found.</p>
+            <div className="text-center">No previous orders found.</div>
           ) : (
-            <ul className="list-unstyled">
+            <ul className="list-unstyled w-100 d-flex flex-column align-items-center">
               {orders.map((order) => (
-                <li
+                <Card
                   key={order.id}
+                  className="mb-4 w-100"
                   style={{
-                    marginBottom: "2rem",
-                    borderBottom: "1px solid #ccc",
+                    borderRadius: "12px",
+                    boxShadow: "0 2px 6px rgba(0,0,0,0.03)",
                   }}
                 >
-                  <strong>Order ID:</strong> {order.id} <br />
-                  <strong>Date:</strong>{" "}
-                  {new Date(order.createdAt).toLocaleString()} <br />
-                  <strong>Total Price:</strong> ${order.totalPrice.toFixed(2)}{" "}
-                  <br />
-                  <Button
-                    variant="outline-primary"
-                    size="sm"
-                    onClick={() => setSelectedOrder(order)}
-                  >
-                    View Details
-                  </Button>
-                </li>
+                  <Card.Body className="d-flex flex-column align-items-center">
+                    <div className="mb-2 text-center w-100">
+                      <div>
+                        <strong>Order ID:</strong> {order.id}
+                      </div>
+                      <div>
+                        <strong>Date:</strong>{" "}
+                        {new Date(order.createdAt).toLocaleString()}
+                      </div>
+                      <div>
+                        <strong>Total Price:</strong> $
+                        {order.totalPrice.toFixed(2)}
+                      </div>
+                    </div>
+                    <Button
+                      variant="outline-primary"
+                      size="sm"
+                      className="mt-1"
+                      onClick={() => setSelectedOrder(order)}
+                    >
+                      View Details
+                    </Button>
+                  </Card.Body>
+                </Card>
               ))}
             </ul>
           )}
+
           {/* Show order details */}
           {selectedOrder && (
-            <div className="mt-4 p-3 border rounded">
-              <h4>Order Details</h4>
-              <Button
-                variant="outline-secondary"
-                size="sm"
-                className="mb-2"
-                onClick={() => setSelectedOrder(null)}
-              >
-                Close
-              </Button>
-              <p>
-                <strong>Order ID:</strong> {selectedOrder.id}
-                <br />
-                <strong>Date:</strong>{" "}
-                {new Date(selectedOrder.createdAt).toLocaleString()}
-                <br />
-                <strong>Total Price:</strong> $
-                {selectedOrder.totalPrice.toFixed(2)}
-              </p>
-              <h5>Products:</h5>
-              <ul>
-                {selectedOrder.items.map((item) => (
-                  <li key={item.id}>
-                    <img
-                      src={item.image}
-                      alt={item.title}
-                      style={{ width: 40, height: 40, marginRight: 8 }}
-                    />
-                    <strong>{item.title}</strong> ({item.category})<br />$
-                    {item.price} × {item.count} = $
-                    {(item.price * item.count).toFixed(2)}
-                    <br />
-                    <em>{item.description}</em>
-                  </li>
-                ))}
-              </ul>
-            </div>
+            <Card className="mt-4 w-100">
+              <Card.Body className="d-flex flex-column align-items-center">
+                <h4 className="mb-3 text-center">Order Details</h4>
+                <Button
+                  variant="outline-secondary"
+                  size="sm"
+                  className="mb-2"
+                  onClick={() => setSelectedOrder(null)}
+                >
+                  Close
+                </Button>
+                <div className="mb-2 text-center w-100">
+                  <div>
+                    <strong>Order ID:</strong> {selectedOrder.id}
+                  </div>
+                  <div>
+                    <strong>Date:</strong>{" "}
+                    {new Date(selectedOrder.createdAt).toLocaleString()}
+                  </div>
+                  <div>
+                    <strong>Total Price:</strong> $
+                    {selectedOrder.totalPrice.toFixed(2)}
+                  </div>
+                </div>
+                <h5 className="text-center">Products:</h5>
+                <ul className="list-unstyled w-100 d-flex flex-column align-items-center">
+                  {selectedOrder.items.map((item) => (
+                    <Card
+                      key={item.id}
+                      className="mb-3 w-100"
+                      style={{
+                        border: "1px solid #e3e3e3",
+                        borderRadius: "12px",
+                        boxShadow: "0 2px 6px rgba(0,0,0,0.03)",
+                      }}
+                    >
+                      <Card.Body className="d-flex flex-column align-items-center w-100">
+                        <div
+                          style={{
+                            width: 70,
+                            height: 70,
+                            borderRadius: "8px",
+                            border: "1px solid #eee",
+                            marginBottom: "0.5rem",
+                            background: "#fafafa",
+                            overflow: "hidden",
+                            position: "relative",
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                          }}
+                        >
+                          {!imageErrorIds[item.id] && item.image ? (
+                            <img
+                              src={item.image}
+                              alt={item.title}
+                              style={{
+                                maxWidth: "100%",
+                                maxHeight: "100%",
+                                display: "block",
+                              }}
+                              onError={() => handleImgError(item.id)}
+                            />
+                          ) : (
+                            <span
+                              style={{
+                                color: "#888",
+                                fontSize: "0.92rem",
+                                width: "100%",
+                                height: "100%",
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "center",
+                                position: "absolute",
+                                top: 0,
+                                left: 0,
+                                background: "#fafafa",
+                                textAlign: "center",
+                              }}
+                            >
+                              {item.title}
+                            </span>
+                          )}
+                        </div>
+                        <div className="text-center">
+                          <strong>{item.title}</strong> ({item.category})
+                          <br />${item.price} × {item.count} = $
+                          {(item.price * item.count).toFixed(2)}
+                          <br />
+                          <em>{item.description}</em>
+                        </div>
+                      </Card.Body>
+                    </Card>
+                  ))}
+                </ul>
+              </Card.Body>
+            </Card>
           )}
         </Col>
       </Row>
